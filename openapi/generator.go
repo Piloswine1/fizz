@@ -11,7 +11,6 @@ import (
 	"strings"
 
 	"github.com/Piloswine1/gadgeto/tonic"
-	"github.com/gin-gonic/gin/binding"
 	"github.com/gofrs/uuid"
 )
 
