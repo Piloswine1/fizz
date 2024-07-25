@@ -1,6 +1,7 @@
 package fizz
 
 import (
+	"context"
 	"errors"
 	"fmt"
 	"net/http"
@@ -88,6 +89,11 @@ func (f *Fizz) Engine() *gin.Engine {
 	return f.engine
 }
 
+// GinRouterGroup returns the underlying Gin router group.
+func (f *Fizz) GinRouterGroup() *gin.RouterGroup {
+	return f.group
+}
+
 // Generator returns the underlying OpenAPI generator.
 func (f *Fizz) Generator() *openapi.Generator {
 	return f.gen
@@ -116,6 +122,11 @@ func (g *RouterGroup) Group(path, name, description string, handlers ...gin.Hand
 // Use adds middleware to the group.
 func (g *RouterGroup) Use(handlers ...gin.HandlerFunc) {
 	g.group.Use(handlers...)
+}
+
+// GinRouterGroup returns the underlying Gin router group.
+func (g *RouterGroup) GinRouterGroup() *gin.RouterGroup {
+	return g.group
 }
 
 // GET is a shortcut to register a new handler with the GET method.
@@ -398,9 +409,9 @@ func XInternal() func(*openapi.OperationInfo) {
 }
 
 // OperationFromContext returns the OpenAPI operation from
-// the givent Gin context or an error if none is found.
-func OperationFromContext(c *gin.Context) (*openapi.Operation, error) {
-	if v, ok := c.Get(ctxOpenAPIOperation); ok {
+// the given Gin context or an error if none is found.
+func OperationFromContext(ctx context.Context) (*openapi.Operation, error) {
+	if v := ctx.Value(ctxOpenAPIOperation); v != nil {
 		if op, ok := v.(*openapi.Operation); ok {
 			return op, nil
 		}

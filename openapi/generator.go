@@ -842,8 +842,8 @@ func (g *Generator) enumFromStructField(sf reflect.StructField, fname string, pa
 		values := strings.Split(etag, ",")
 		sftype := sf.Type
 
-		// Use underlying element type if its an array or a slice.
-		if sftype.Kind() == reflect.Slice || sftype.Kind() == reflect.Array {
+		// Use underlying element type if it's an array/slice/pointer
+		for sftype.Kind() == reflect.Ptr || sftype.Kind() == reflect.Slice || sftype.Kind() == reflect.Array {
 			sftype = sftype.Elem()
 		}
 		for _, val := range values {
@@ -875,8 +875,14 @@ func (g *Generator) newSchemaFromType(t reflect.Type, mediaType string) *SchemaO
 	if t.Kind() == reflect.Ptr {
 		t = t.Elem()
 		nullable = true
+	} else if t.Implements(tofNullable) {
+		i, ok := reflect.New(t).Interface().(Nullable)
+		if ok {
+			nullable = i.Nullable()
+		}
 	}
 	dt := g.datatype(t)
+
 	if dt == TypeUnsupported {
 		g.error(&TypeError{
 			Message: "unsupported type",
@@ -1009,8 +1015,10 @@ func (g *Generator) flattenStructSchema(t, parent reflect.Type, schema *Schema, 
 			ft = ft.Elem()
 		}
 		isUnexported := f.PkgPath != ""
+		mediaTag := mediaTags[tonic.MediaType()]
+		_, hasTag := f.Tag.Lookup(mediaTag)
 
-		if f.Anonymous {
+		if f.Anonymous && !hasTag {
 			if isUnexported && ft.Kind() != reflect.Struct {
 				// Ignore embedded fields of unexported non-struct types.
 				continue
@@ -1175,6 +1183,10 @@ func (g *Generator) updateSchemaValidation(schema *Schema, sf reflect.StructFiel
 
 	for _, t := range tags {
 		if t == "dive" || t == "keys" {
+			break
+		}
+		if t == "email" {
+			schema.Format = "email"
 			break
 		}
 		if t == "email" {
