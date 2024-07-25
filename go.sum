@@ -51,8 +51,8 @@ github.com/leodido/go-urn v1.2.1/go.mod h1:zt4jvISO2HfUBqxjfIshjdMTYS56ZS/qv49ic
 github.com/mattn/go-isatty v0.0.9/go.mod h1:YNRxwqDuOph6SZLI9vUUz6OYw3QyUt7WiY2yME+cCiQ=
 github.com/mattn/go-isatty v0.0.14 h1:yVuAays6BHfxijgZPzw+3Zlu5yQgKGP2/hcQbHb7S9Y=
 github.com/mattn/go-isatty v0.0.14/go.mod h1:7GGIvUiUoEMVVmxf/4nioHXj79iQHKdU27kJ6hsGG94=
-github.com/mcorbin/gadgeto v0.12.0 h1:l9mG0vM7HhjD7dDVHPLHf1N1yRN18rXlQcLgbRuAnGc=
-github.com/mcorbin/gadgeto v0.12.0/go.mod h1:TgWAypKilRvWzKtAbFl1xmdarL0maIkEqRoS1bJt3mY=
+github.com/Piloswine1/gadgeto v0.12.0 h1:l9mG0vM7HhjD7dDVHPLHf1N1yRN18rXlQcLgbRuAnGc=
+github.com/Piloswine1/gadgeto v0.12.0/go.mod h1:TgWAypKilRvWzKtAbFl1xmdarL0maIkEqRoS1bJt3mY=
 github.com/modern-go/concurrent v0.0.0-20180228061459-e0a39a4cb421/go.mod h1:6dJC0mAP4ikYIbvyc7fijjWJddQyLn8Ig3JB5CqoB9Q=
 github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd h1:TRLaZ9cD/w8PVh93nsPXa1VrQ6jlwL5oN8l14QlcNfg=
 github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd/go.mod h1:6dJC0mAP4ikYIbvyc7fijjWJddQyLn8Ig3JB5CqoB9Q=

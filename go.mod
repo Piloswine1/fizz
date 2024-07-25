@@ -1,4 +1,4 @@
-module github.com/mcorbin/fizz
+module github.com/Piloswine1/fizz
 
 go 1.18
 
@@ -8,7 +8,7 @@ require (
 	github.com/gin-gonic/gin v1.8.1
 	github.com/gofrs/uuid v4.2.0+incompatible
 	github.com/juju/errors v0.0.0-20220622220526-54a94488269b
-	github.com/mcorbin/gadgeto v0.12.0
+	github.com/Piloswine1/gadgeto v0.12.0
 	github.com/stretchr/testify v1.8.0
 	golang.org/x/text v0.3.7
 	gopkg.in/yaml.v2 v2.4.0

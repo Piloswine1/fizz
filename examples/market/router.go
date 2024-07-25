@@ -7,10 +7,10 @@ import (
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
-	"github.com/mcorbin/gadgeto/tonic"
+	"github.com/Piloswine1/gadgeto/tonic"
 
-	"github.com/mcorbin/fizz"
-	"github.com/mcorbin/fizz/openapi"
+	"github.com/Piloswine1/fizz"
+	"github.com/Piloswine1/fizz/openapi"
 )
 
 // NewRouter returns a new router for the
