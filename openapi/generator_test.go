@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"math"
+	"mime/multipart"
 	"reflect"
 	"strconv"
 	"testing"
@@ -12,6 +13,7 @@ import (
 
 	"github.com/Pallinder/go-randomdata"
 	"github.com/Piloswine1/gadgeto/tonic"
+	"github.com/gin-gonic/gin/binding"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -70,6 +72,9 @@ type (
 	Z map[string]*Y
 	Q struct {
 		NnNnnN string `json:"nnNnnN"`
+	}
+	F struct {
+		File *multipart.FileHeader `form:"file"`
 	}
 	V struct {
 		L int
@@ -257,6 +262,16 @@ func TestNewSchemaFromStructErrors(t *testing.T) {
 	assert.Nil(t, sor)
 }
 
+// TestNewSchemaFromStructErrors tests the errors
+// case of generation of a schema from a struct.
+func TestNewSchemaFromStructWithFile(t *testing.T) {
+	g := gen(t)
+
+	// Invalid input.
+	sor := g.newSchemaFromType(reflect.TypeOf(new(F)), binding.MIMEMultipartPOSTForm)
+	assert.NotNil(t, sor)
+}
+
 // TestNewSchemaFromStructFieldExampleValues tests the
 // case of setting example values.
 func TestNewSchemaFromStructFieldExampleValues(t *testing.T) {
@@ -427,7 +442,7 @@ func TestNewSchemaFromEnumField(t *testing.T) {
 
 	for i, tt := range tests {
 		t.Run(tt.fname, func(t *testing.T) {
-			sor := g.newSchemaFromStructField(typ.Field(i), true, tt.fname, typ)
+			sor := g.newSchemaFromStructField(typ.Field(i), true, tt.fname, typ, tonic.MediaType())
 			assert.NotNil(t, sor)
 			var enum []interface{}
 			if tt.isSlice {

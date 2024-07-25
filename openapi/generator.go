@@ -10,8 +10,9 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/gofrs/uuid"
 	"github.com/Piloswine1/gadgeto/tonic"
+	"github.com/gin-gonic/gin/binding"
+	"github.com/gofrs/uuid"
 )
 
 const (
@@ -31,8 +32,9 @@ var (
 // mediaTags maps media types to well-known
 // struct tags used for marshaling.
 var mediaTags = map[string]string{
-	"application/json": "json",
-	"application/xml":  "xml",
+	"application/json":    "json",
+	"application/xml":     "xml",
+	"multipart/form-data": "form",
 }
 
 // Generator is an OpenAPI 3 generator.
@@ -958,6 +960,23 @@ func (g *Generator) buildSchemaRecursive(t reflect.Type, mediaType string) *Sche
 	return &SchemaOrRef{Schema: schema}
 }
 
+func checkIfFileType(t reflect.Type, mediaType string) bool {
+	if mediaType != binding.MIMEMultipartPOSTForm {
+		return false
+	}
+
+	content, ok := t.FieldByName("content")
+	if !ok {
+		return false
+	}
+
+	if content.Type.Kind() == reflect.Slice &&
+		content.Type.Elem().Kind() == reflect.Uint8 {
+		return true
+	}
+	return false
+}
+
 // structSchema returns an OpenAPI schema that describe
 // the Go struct represented by the type t.
 func (g *Generator) newSchemaFromStruct(t reflect.Type, mediaType string) *SchemaOrRef {
@@ -965,6 +984,13 @@ func (g *Generator) newSchemaFromStruct(t reflect.Type, mediaType string) *Schem
 		return nil
 	}
 	name := g.typeName(t)
+
+	if checkIfFileType(t, mediaType) {
+		return &SchemaOrRef{Schema: &Schema{
+			Type:   "string",
+			Format: "binary",
+		}}
+	}
 
 	// If the type of the field has already been registered,
 	// skip the schema generation to avoid a recursive loop.
@@ -1015,7 +1041,7 @@ func (g *Generator) flattenStructSchema(t, parent reflect.Type, schema *Schema, 
 			ft = ft.Elem()
 		}
 		isUnexported := f.PkgPath != ""
-		mediaTag := mediaTags[tonic.MediaType()]
+		mediaTag := mediaTags[mediaType]
 		_, hasTag := f.Tag.Lookup(mediaTag)
 
 		if f.Anonymous && !hasTag {
@@ -1259,7 +1285,7 @@ func fieldNameFromTag(sf reflect.StructField, tagName string) string {
 	return name
 }
 
-/// parseExampleValue is used to transform the string representation of the example value to the correct type.
+// / parseExampleValue is used to transform the string representation of the example value to the correct type.
 func parseExampleValue(t reflect.Type, value string) (interface{}, error) {
 	// If the type implements Exampler use the ParseExample method to create the example
 	i, ok := reflect.New(t).Interface().(Exampler)
