@@ -985,7 +985,7 @@ func (g *Generator) newSchemaFromStruct(t reflect.Type, mediaType string) *Schem
 	}
 	name := g.typeName(t)
 
-	if checkIfFileType(t, mediaType) {
+	if name == "FileHeader" && checkIfFileType(t, mediaType) {
 		return &SchemaOrRef{Schema: &Schema{
 			Type:   "string",
 			Format: "binary",
