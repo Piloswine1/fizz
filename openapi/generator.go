@@ -960,23 +960,6 @@ func (g *Generator) buildSchemaRecursive(t reflect.Type, mediaType string) *Sche
 	return &SchemaOrRef{Schema: schema}
 }
 
-func checkIfFileType(t reflect.Type, mediaType string) bool {
-	if mediaType != binding.MIMEMultipartPOSTForm {
-		return false
-	}
-
-	content, ok := t.FieldByName("content")
-	if !ok {
-		return false
-	}
-
-	if content.Type.Kind() == reflect.Slice &&
-		content.Type.Elem().Kind() == reflect.Uint8 {
-		return true
-	}
-	return false
-}
-
 // structSchema returns an OpenAPI schema that describe
 // the Go struct represented by the type t.
 func (g *Generator) newSchemaFromStruct(t reflect.Type, mediaType string) *SchemaOrRef {
@@ -984,13 +967,6 @@ func (g *Generator) newSchemaFromStruct(t reflect.Type, mediaType string) *Schem
 		return nil
 	}
 	name := g.typeName(t)
-
-	if name == "FileHeader" && checkIfFileType(t, mediaType) {
-		return &SchemaOrRef{Schema: &Schema{
-			Type:   "string",
-			Format: "binary",
-		}}
-	}
 
 	// If the type of the field has already been registered,
 	// skip the schema generation to avoid a recursive loop.

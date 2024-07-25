@@ -74,7 +74,7 @@ type (
 		NnNnnN string `json:"nnNnnN"`
 	}
 	F struct {
-		File *multipart.FileHeader `form:"file"`
+		File *multipart.FileHeader `form:"file" format:"binary"`
 	}
 	V struct {
 		L int
