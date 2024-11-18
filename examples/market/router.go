@@ -95,4 +95,11 @@ func routes(grp *fizz.RouterGroup) {
 		// random media type for tests
 		r.SetRequestMediaType("multipart/form-data")
 	}))
+
+	// List all available fruits as excel.
+	grp.GET("excel/:name/override", []fizz.OperationOption{
+		fizz.InputModel(OverrideParam{}),
+		fizz.OutputModel(fizz.Binary),
+		fizz.Summary("show how to override tonic hooks/media types for a route"),
+	}, tonic.Handler(Override, 200))
 }

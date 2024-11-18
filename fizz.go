@@ -218,11 +218,17 @@ func (g *RouterGroup) Handle(path, method string, infos []OperationOption, handl
 			it = reflect.TypeOf(oi.InputModel)
 		}
 
+		// Set an input type if provided.
+		ot := hfunc.OutputType()
+		if oi.OutputModel != nil {
+			ot = reflect.TypeOf(oi.OutputModel)
+		}
+
 		// Consolidate path for OpenAPI spec.
 		operationPath := joinPaths(g.group.BasePath(), path)
 
 		// Add operation to the OpenAPI spec.
-		operation, err := g.gen.AddOperation(operationPath, method, g.Name, requestMediaType, responseMediaType, it, hfunc.OutputType(), oi)
+		operation, err := g.gen.AddOperation(operationPath, method, g.Name, requestMediaType, responseMediaType, it, ot, oi)
 		if err != nil {
 			panic(fmt.Sprintf(
 				"error while generating OpenAPI spec on operation %s %s: %s",
@@ -368,6 +374,13 @@ func Header(name, desc string, model interface{}) func(*openapi.OperationInfo) {
 func InputModel(model interface{}) func(*openapi.OperationInfo) {
 	return func(o *openapi.OperationInfo) {
 		o.InputModel = model
+	}
+}
+
+// InputModel overrides the binding model of the operation.
+func OutputModel(model interface{}) func(*openapi.OperationInfo) {
+	return func(o *openapi.OperationInfo) {
+		o.OutputModel = model
 	}
 }
 

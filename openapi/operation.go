@@ -11,6 +11,7 @@ type OperationInfo struct {
 	Description       string
 	Deprecated        bool
 	InputModel        interface{}
+	OutputModel       interface{}
 	Responses         []*OperationResponse
 	Security          []*SecurityRequirement
 	XCodeSamples      []*XCodeSample
