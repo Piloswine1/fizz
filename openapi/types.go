@@ -11,6 +11,8 @@ import (
 	"github.com/gofrs/uuid"
 )
 
+type BinaryString struct {}
+
 var (
 	tofDataType = reflect.TypeOf((*DataType)(nil)).Elem()
 	tofNullable = reflect.TypeOf((*Nullable)(nil)).Elem()
@@ -25,6 +27,8 @@ var (
 
 	// Imported.
 	tofUUID = reflect.TypeOf(uuid.UUID{})
+
+	tofBinaryString = reflect.TypeOf(BinaryString{})
 )
 
 var _ DataType = (*InternalDataType)(nil)
@@ -139,6 +143,8 @@ func DataTypeFromType(t reflect.Type) DataType {
 	}
 	// Switch over Golang types.
 	switch t {
+	case tofBinaryString:
+		return TypeBinary
 	case tofTime:
 		return TypeDateTime
 	case tofDuration:

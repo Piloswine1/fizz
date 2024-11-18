@@ -882,6 +882,7 @@ func (g *Generator) newSchemaFromType(t reflect.Type, mediaType string) *SchemaO
 			nullable = i.Nullable()
 		}
 	}
+	
 	dt := g.datatype(t)
 
 	if dt == TypeUnsupported {
